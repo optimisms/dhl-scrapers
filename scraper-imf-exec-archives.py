@@ -2,11 +2,13 @@ from time import sleep
 import requests
 from bs4 import BeautifulSoup
 
+# helper function to write html to file
 def writeHTML(fileName, html):
     f = open(fileName, "w+")
     f.write(html)
     f.close()
 
+# helper function to convert incremental to string including leading zeroes
 def incToString(incremental):
     incString = str(incremental)
     while len(incString) < 6:
@@ -18,6 +20,7 @@ if __name__ == '__main__':
     brokenTracker = 0
     totalReqs = 0
 
+    # URL is incrementable - starting with last accessed page (.../125008234.html)
     for incremental in range(8234, 322149):
         totalReqs += 1
         if (incremental % 100 == 0):
@@ -66,12 +69,16 @@ if __name__ == '__main__':
         # create second request for PDF
         if fileType == "item":
             linkContainer = record.find(class_='ais-image-container')
+
+            # if link container does not exist, save in special folder and continue to next iteration
             if (linkContainer == None):
                 htmlName = "/storage/jeremy/imf/exec-archives/html/other/no-link-container/" + incToString(incremental) + ".html"
                 writeHTML(htmlName, soup.prettify())
                 continue
 
             pdfURL = linkContainer.find('a')['href']
+
+            # if no href found, save in special folder and continue to next iteration
             if (pdfURL == None):
                 htmlName = "/storage/jeremy/imf/exec-archives/html/other/no-url/" + incToString(incremental) + ".html"
                 writeHTML(htmlName, soup.prettify())
@@ -79,7 +86,6 @@ if __name__ == '__main__':
             pdfResp = requests.get(pdfURL)
 
             # save PDF to new text file
-            # (file name in storage/jeremy)
             pdfName = "/storage/jeremy/imf/exec-archives/pdfs/" + incToString(incremental) + ".pdf"
             f2 = open(pdfName, "wb")
             f2.write(pdfResp.content)
