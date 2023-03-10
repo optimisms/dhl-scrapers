@@ -29,17 +29,25 @@ if __name__ == '__main__':
         #     print("TITLE:", title)
 
         if title == "Request Rejected":
-            print(file)
-            title = file.split("/")[-1]
-            fileName = "/storage/jeremy/imf/exec-archives/html/other/request-rejected/" + title
+            continue
+            num = file.split("/")[-1]
+            fileName = "/storage/jeremy/imf/exec-archives/html/other/request-rejected/" + num
             writeHTML(fileName, html)
-            # delete file
             os.remove(file)
-        
-
-        # break
-        # record = soup.find(class_='record')
-        # hierarchy = soup.find(class_='hierarchy')
+        elif "Simple search" in title:
+            print(file)
+            num = file.split("/")[-1]
+            fileName = "/storage/jeremy/imf/exec-archives/html/other/temp/" + num
+            writeHTML(fileName, html)
+            os.remove(file)
+            break
+        # else:
+        #     print(file)
+        #     num = file.split("/")[-1]
+        #     fileName = "/storage/jeremy/imf/exec-archives/html/other/unknown-error/" + num
+        #     writeHTML(fileName, html)
+        #     os.remove(file)
+        #     break
 
         # if no record, save in special folder and continue to next iteration
         # if record == None:
