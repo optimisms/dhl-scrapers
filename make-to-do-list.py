@@ -44,22 +44,5 @@ if __name__ == '__main__':
             writeHTML(fileName, html)
             os.remove(file)
 
-        # if no record, save in special folder and continue to next iteration
-        # if record == None:
-        #     htmlName = "/storage/jeremy/imf/exec-archives/html/other/no-record/" + incToString(incremental) + ".html"
-        #     writeHTML(htmlName, soup.prettify())
-        #     brokenTracker += 1
-
-        #     # if broken for 50 iterations, print debug statements and stop
-        #     if brokenTracker >= 50:
-        #         print("Broken for 50 iterations, stopping on " + incToString(incremental))
-        #         print("Total reqs before stopping: " + str(totalReqs))
-        #         break
-        #     continue
-
-        # from glob import glob
-        # give it the path /storage/jeremy/imf/exec-archives/html/other/no-record/
-        #python os module - delete a file
         # if no record try again 10 times before giving up
-
         # check for duplicate files due to multiple processes running
