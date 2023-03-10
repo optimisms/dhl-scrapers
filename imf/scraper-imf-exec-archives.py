@@ -16,6 +16,8 @@ def incToString(incremental):
     return incString
 
 if __name__ == '__main__':
+    rootPath = "/storage/jeremy/imf/exec-archives/"
+    rootHtmlName = "/storage/jeremy/imf/exec-archives/html/"
     permURL = 'https://archivescatalog.imf.org/Details/ArchiveExecutive/'
     brokenTracker = 0
     totalReqs = 0
@@ -41,8 +43,21 @@ if __name__ == '__main__':
 
         # if no record, save in special folder and continue to next iteration
         if record == None:
-            htmlName = "/storage/jeremy/imf/exec-archives/html/other/no-record/" + incToString(incremental) + ".html"
-            writeHTML(htmlName, soup.prettify())
+            title = soup.find("title").text.strip()
+            fileName = rootPath + "other/"
+
+            # for requests rejected by server failure
+            if title == "Request Rejected":
+                fileName += "request-rejected/"
+            # for records that do not exist & returned search home page
+            elif "Simple search" in title:
+                fileName += "temp/"
+            # catch-all for any others
+            else:
+                fileName += "unknown-error/"
+                
+            fileName += incToString(incremental) + ".html"
+            writeHTML(fileName, soup.prettify())
             brokenTracker += 1
 
             # if broken for 50 iterations, print debug statements and stop
@@ -56,7 +71,7 @@ if __name__ == '__main__':
         fileType = record.find(class_="label", string="Level of description").parent.find(class_="value").text
         
         # set file path based on file type
-        htmlName = "/storage/jeremy/imf/exec-archives/html/"
+        htmlName = rootHtmlName
         if fileType == "item" or fileType == "collection" or fileType == "series" or fileType == "sub-series":
             htmlName += fileType + "/"
         else:
@@ -72,7 +87,7 @@ if __name__ == '__main__':
 
             # if link container does not exist, save in special folder and continue to next iteration
             if (linkContainer == None):
-                htmlName = "/storage/jeremy/imf/exec-archives/html/other/no-link-container/" + incToString(incremental) + ".html"
+                htmlName = rootHtmlName + "other/no-link-container/" + incToString(incremental) + ".html"
                 writeHTML(htmlName, soup.prettify())
                 continue
 
@@ -80,13 +95,13 @@ if __name__ == '__main__':
 
             # if no href found, save in special folder and continue to next iteration
             if (pdfURL == None):
-                htmlName = "/storage/jeremy/imf/exec-archives/html/other/no-url/" + incToString(incremental) + ".html"
+                htmlName = rootHtmlName + "other/no-url/" + incToString(incremental) + ".html"
                 writeHTML(htmlName, soup.prettify())
                 continue
             pdfResp = requests.get(pdfURL)
 
             # save PDF to new text file
-            pdfName = "/storage/jeremy/imf/exec-archives/pdfs/" + incToString(incremental) + ".pdf"
+            pdfName = rootPath + "pdfs/" + incToString(incremental) + ".pdf"
             f2 = open(pdfName, "wb")
             f2.write(pdfResp.content)
             f2.close()
