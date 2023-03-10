@@ -20,8 +20,8 @@ if __name__ == '__main__':
     brokenTracker = 0
     totalReqs = 0
 
-    # URL is incrementable - starting with last accessed page (.../125008234.html)
-    for incremental in range(8234, 322149):
+    # URL is incrementable - starting with last accessed page (.../125065838.html)
+    for incremental in range(90483, 322149):
         totalReqs += 1
         if (incremental % 100 == 0):
             print("Made it to " + incToString(incremental))
@@ -95,3 +95,11 @@ if __name__ == '__main__':
         sleep (1)
 
         #less file, inside 'F'
+        #come back to 125061624 - 125065837
+
+        # from glob import glob
+        # give it the path /storage/jeremy/imf/exec-archives/html/other/no-record/
+        #python os module - delete a file
+        # if no record try again 10 times before giving up
+
+        # check for duplicate files due to multiple processes running
