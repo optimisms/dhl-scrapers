@@ -22,8 +22,8 @@ if __name__ == '__main__':
     brokenTracker = 0
     totalReqs = 0
 
-    # URL is incrementable - starting with last accessed page (.../125065838.html)
-    for incremental in range(90483, 322149):
+    # URL is incrementable - starting with last accessed page (.../125193282.html)
+    for incremental in range(193282, 322149):
         totalReqs += 1
         if (incremental % 100 == 0):
             print("Made it to " + incToString(incremental))
@@ -44,21 +44,22 @@ if __name__ == '__main__':
         # if no record, save in special folder and continue to next iteration
         if record == None:
             title = soup.find("title").text.strip()
-            fileName = rootPath + "other/"
+            fileName = rootHtmlName + "other/"
 
             # for requests rejected by server failure
             if title == "Request Rejected":
                 fileName += "request-rejected/"
+                brokenTracker += 1
             # for records that do not exist & returned search home page
             elif "Simple search" in title:
-                fileName += "temp/"
+                fileName += "no-record/"
             # catch-all for any others
             else:
                 fileName += "unknown-error/"
+                brokenTracker += 1
                 
             fileName += incToString(incremental) + ".html"
             writeHTML(fileName, soup.prettify())
-            brokenTracker += 1
 
             # if broken for 50 iterations, print debug statements and stop
             if brokenTracker >= 50:
