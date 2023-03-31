@@ -22,8 +22,8 @@ if __name__ == '__main__':
     brokenTracker = 0
     totalReqs = 0
 
-    # URL is incrementable - starting with last accessed page (.../125193282.html)
-    for incremental in range(193282, 322149):
+    # URL is incrementable - starting with last accessed page (.../125221935.html)
+    for incremental in range(221935, 322149):
         totalReqs += 1
         if (incremental % 100 == 0):
             print("Made it to " + incToString(incremental))
@@ -71,16 +71,21 @@ if __name__ == '__main__':
         # parse for file type
         fileType = record.find(class_="label", string="Level of description").parent.find(class_="value").text
         
-        # set file path based on file type
+        # set file path based on file type and/or missing hierarchy
         htmlName = rootHtmlName
-        if fileType == "item" or fileType == "collection" or fileType == "series" or fileType == "sub-series":
-            htmlName += fileType + "/"
+        writeable = record.prettify()
+        if hierarchy == None:
+            htmlName += "other/no-hierarchy/"
         else:
-            htmlName += "other/other-file-type/"
+            if fileType == "item" or fileType == "collection" or fileType == "series" or fileType == "sub-series":
+                htmlName += fileType + "/"
+            else:
+                htmlName += "other/other-file-type/"
+            writeable += "\n\n" + hierarchy.prettify()
         htmlName += incToString(incremental) + ".html"
 
         # save html to new file
-        writeHTML(htmlName, record.prettify()+"\n\n"+hierarchy.prettify())
+        writeHTML(htmlName, writeable)
 
         # create second request for PDF
         if fileType == "item":
